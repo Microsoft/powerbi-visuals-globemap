@@ -8,3 +8,4 @@ typings
 *.log
 /coverage
 .vscode/settings.json
+webpack.statistics.html

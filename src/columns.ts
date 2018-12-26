@@ -24,40 +24,43 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    import DataViewValueColumns = powerbi.DataViewValueColumns;
-    import DataViewValueColumn = powerbi.DataViewValueColumn;
-    export type GlobeMapCategoricalColumns = DataViewCategoryColumn & DataViewValueColumn[] & DataViewValueColumns;
+import * as _ from "lodash";
+import powerbi from "powerbi-visuals-api";
 
-    // powerbi.extensibility.utils.dataview
-    import converterHelper = powerbi.extensibility.utils.dataview.converterHelper;
+import DataView = powerbi.DataView;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
 
-    export class GlobeMapColumns<T> {
-        public static getCategoricalColumns(dataView: DataView): GlobeMapColumns<GlobeMapCategoricalColumns> {
-            let categorical = dataView && dataView.categorical;
-            let categories = categorical && categorical.categories || [];
-            let values = categorical && categorical.values || <DataViewValueColumns>[];
-            return categorical && _.mapValues(
-                new this<DataViewCategoryColumn & DataViewValueColumn[] & DataViewValueColumns>(),
-                (n, i) => categories.filter(x => x.source.roles && x.source.roles[i])[0]
-                    || values.source && values.source.roles && values.source.roles[i] && values
-                    || values.filter(x => x.source.roles && x.source.roles[i]));
-        }
+export type GlobeMapCategoricalColumns = DataViewCategoryColumn & DataViewValueColumn[] & DataViewValueColumns;
 
-        public static getGroupedValueColumns(dataView: DataView):  GlobeMapColumns<DataViewValueColumn>[]  {
-            let categorical: DataViewCategorical = dataView && dataView.categorical;
-            let values = categorical && categorical.values;
-            let grouped: DataViewValueColumnGroup[] = values && values.grouped();
-            return grouped && grouped.map(g => _.mapValues(
-                new this<DataViewValueColumn>(),
-                (n, i) => g.values.filter(v => v.source.roles[i])[0]));
-        }
-
-        public Location: T = null;
-        public Series: T = null;
-        public X: T = null;
-        public Y: T = null;
-        public Height: T = null;
-        public Heat: T = null;
+export class GlobeMapColumns<T> {
+    public static getCategoricalColumns(dataView: DataView): GlobeMapColumns<GlobeMapCategoricalColumns> {
+        let categorical = dataView && dataView.categorical;
+        let categories = categorical && categorical.categories || [];
+        let values = categorical && categorical.values || <DataViewValueColumns>[];
+        return categorical && _.mapValues(
+            new this<DataViewCategoryColumn & DataViewValueColumn[] & DataViewValueColumns>(),
+            (n, i) => categories.filter(x => x.source.roles && x.source.roles[i])[0]
+                || values.source && values.source.roles && values.source.roles[i] && values
+                || values.filter(x => x.source.roles && x.source.roles[i]));
     }
+
+    public static getGroupedValueColumns(dataView: DataView): GlobeMapColumns<DataViewValueColumn>[] {
+        let categorical: DataViewCategorical = dataView && dataView.categorical;
+        let values = categorical && categorical.values;
+        let grouped: DataViewValueColumnGroup[] = values && values.grouped();
+        return grouped && grouped.map(g => _.mapValues(
+            new this<DataViewValueColumn>(),
+            (n, i) => g.values.filter(v => v.source.roles[i])[0]));
+    }
+
+    public Location: T = null;
+    public Series: T = null;
+    public X: T = null;
+    public Y: T = null;
+    public Height: T = null;
+    public Heat: T = null;
 }

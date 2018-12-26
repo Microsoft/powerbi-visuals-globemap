@@ -24,14 +24,14 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    // powerbi.extensibility.utils.dataview
-    import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
-    export class GlobeMapSettings extends DataViewObjectsParser {
-        public dataPoint: DataPointSettings = new DataPointSettings();
-    }
+// powerbi.extensibility.utils.dataview
+import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
+import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
-    export class DataPointSettings {
-    }
+export class GlobeMapSettings extends DataViewObjectsParser {
+    public dataPoint: DataPointSettings = new DataPointSettings();
+}
+
+export class DataPointSettings {
 }

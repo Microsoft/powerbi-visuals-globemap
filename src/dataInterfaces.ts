@@ -24,83 +24,87 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    // powerbi.extensibility.utils.interactivity
-    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+import powerbi from "powerbi-visuals-api";
 
-    // powerbi.extensibility.geocoder
-    import ILocation = powerbi.extensibility.geocoder.ILocation;
+import DataView = powerbi.DataView;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 
-    export interface GlobeMapData {
-        dataView: DataView;
-        settings: GlobeMapSettings;
-        dataPoints: GlobeMapDataPoint[];
-        seriesDataPoints: GlobeMapSeriesDataPoint[];
-    }
+import { interactivitySelectionService } from "powerbi-visuals-utils-interactivityutils";
+import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
 
-    export interface GlobeMapDataPoint {
-        location: ILocation;
-        place: string;
-        locationType: string;
-        placeKey: string;
-        height: number;
-        heightBySeries: number[];
-        seriesToolTipData: {};
-        heat: number;
-        toolTipData: {};
-    }
+import { ILocation } from "./geocoder/geocoder";
+import { GlobeMapSettings } from "./settings";
 
-    export interface GlobeMapSeriesDataPoint extends SelectableDataPoint {
-        label: string;
-        color: string;
-        category?: string;
-    }
+export interface GlobeMapData {
+    dataView: DataView;
+    settings: GlobeMapSettings;
+    dataPoints: GlobeMapDataPoint[];
+    seriesDataPoints: GlobeMapSeriesDataPoint[];
+}
 
-    export interface BingMetadata {
-        resourceSets: ResourceSet[];
-        statusCode: string;
-        statusDescription: string;
-    }
+export interface GlobeMapDataPoint {
+    location: ILocation;
+    place: string;
+    locationType: string;
+    placeKey: string;
+    height: number;
+    heightBySeries: number[];
+    seriesToolTipData: {};
+    heat: number;
+    toolTipData: {};
+}
 
-    export interface ResourceSet {
-        resources: BingResourceMetadata[];
-    }
+export interface GlobeMapSeriesDataPoint extends SelectableDataPoint {
+    label: string;
+    color: string;
+    category?: string;
+}
 
-    export interface BingResourceMetadata {
-        imageHeight: number;
-        imageWidth: number;
-        imageUrl: string;
-        imageUrlSubdomains: string[];
-    }
+export interface BingMetadata {
+    resourceSets: ResourceSet[];
+    statusCode: string;
+    statusDescription: string;
+}
 
-    export interface TileMap {
-        [quadKey: string]: string;
-    }
+export interface ResourceSet {
+    resources: BingResourceMetadata[];
+}
 
-    export interface ICanvasCoordinate {
-        x: number;
-        y: number;
-    }
+export interface BingResourceMetadata {
+    imageHeight: number;
+    imageWidth: number;
+    imageUrl: string;
+    imageUrlSubdomains: string[];
+}
 
-    export interface IGlobeMapValueTypeDescriptor extends ValueTypeDescriptor {
-        category: string;
-    }
+export interface TileMap {
+    [quadKey: string]: string;
+}
 
-    export interface IGlobeMapToolTipData {
-        location: PrimitiveValue;
-        longitude: PrimitiveValue;
-        latitude: PrimitiveValue;
-        series: PrimitiveValue;
-        height: PrimitiveValue;
-        heat: PrimitiveValue;
-    }
+export interface ICanvasCoordinate {
+    x: number;
+    y: number;
+}
 
-    export interface IGlobeMapObject3DWithToolTipData extends THREE.Object3D {
-        toolTipData: IGlobeMapToolTipData;
-    }
+export interface IGlobeMapValueTypeDescriptor extends ValueTypeDescriptor {
+    category: string;
+}
 
-    export interface ITileGapObject {
-        gaps: number[][];
-        rank: number;
-    }
+export interface IGlobeMapToolTipData {
+    location: PrimitiveValue;
+    longitude: PrimitiveValue;
+    latitude: PrimitiveValue;
+    series: PrimitiveValue;
+    height: PrimitiveValue;
+    heat: PrimitiveValue;
+}
+
+export interface IGlobeMapObject3DWithToolTipData extends THREE.Object3D {
+    toolTipData: IGlobeMapToolTipData;
+}
+
+export interface ITileGapObject {
+    gaps: number[][];
+    rank: number;
 }

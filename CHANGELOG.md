@@ -1,4 +1,5 @@
 ## 2.5.2
+* Webpack integration
 * UPD: using StorageService for localStorage logic
 * UPD: powerbi-visuals-tools 2.3.0 for StorageService usage
 * UPD: powerbi-visuals-utils-testutils 1.3.2 for StorageService mocks usage
