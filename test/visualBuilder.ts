@@ -24,45 +24,48 @@
  *  THE SOFTWARE.
  */
 
-/// <reference path="_references.ts"/>
+import powerbi from "powerbi-visuals-api";
+import * as _ from "lodash";
 
-module powerbi.extensibility.visual.test {
-    // powerbi.extensibility.utils.test
-    import VisualBuilderBase = powerbi.extensibility.utils.test.VisualBuilderBase;
-    import renderTimeout = powerbi.extensibility.utils.test.helpers.renderTimeout;
+import DataView = powerbi.DataView;
+import VisualUpdateType = powerbi.VisualUpdateType;
 
-    // GlobeMap1447669447625
-    import VisualClass = powerbi.extensibility.visual.GlobeMap1447669447625.GlobeMap;
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 
-    export class GlobeMapBuilder extends VisualBuilderBase<VisualClass> {
-        private static ChangeAllType: number = 62;
-        constructor(width: number, height: number) {
-            super(width, height, "GlobeMap1447669447625");
-        }
+import { VisualBuilderBase, renderTimeout } from "powerbi-visuals-utils-testutils";
+import { GlobeMap as VisualClass } from "../src/globemap";
 
-        public update(dataView: DataView[] | DataView, updateType?: VisualUpdateType): void {
-            this.visual.update(<VisualUpdateOptions>{
-                dataViews: _.isArray(dataView) ? dataView : [dataView],
-                viewport: this.viewport,
-                type: updateType
-            });
-        }
+export class GlobeMapBuilder extends VisualBuilderBase<VisualClass> {
+    private static ChangeAllType: number = 62;
+    constructor(width: number, height: number) {
+        super(width, height, "GlobeMap1447669447625");
+    }
 
-        public updateRenderTimeout(
-            dataViews: DataView[] | DataView,
-            fn: Function,
-            updateType: VisualUpdateType = GlobeMapBuilder.ChangeAllType,
-            timeout?: number): number {
-            this.update(dataViews, updateType);
-            return renderTimeout(fn, timeout);
-        }
+    public update(dataView: DataView[] | DataView, updateType?: VisualUpdateType): void {
+        let options: VisualUpdateOptions = {
+            dataViews: _.isArray(dataView) ? dataView : [dataView],
+            viewport: this.viewport,
+            type: updateType
+        };
 
-        protected build(options: VisualConstructorOptions) {
-            return new VisualClass(options);
-        }
+        this.visual.update(options);
+    }
 
-        public get instance(): VisualClass {
-            return this.visual;
-        }
+    public updateRenderTimeout(
+        dataViews: DataView[] | DataView,
+        fn: Function,
+        updateType: VisualUpdateType = GlobeMapBuilder.ChangeAllType,
+        timeout?: number): number {
+        this.update(dataViews, updateType);
+        return renderTimeout(fn, timeout);
+    }
+
+    protected build(options: VisualConstructorOptions): VisualClass {
+        return new VisualClass(options);
+    }
+
+    public get instance(): VisualClass {
+        return this.visual;
     }
 }

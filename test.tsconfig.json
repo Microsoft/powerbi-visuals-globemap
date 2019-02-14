@@ -3,14 +3,22 @@
     "allowJs": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "esnext",
-    "target": "ES2016",
+    "module": "es6",
+    "target": "ES6",
     "sourceMap": true,
     "outDir": "./.tmp/build/",
+    "sourceRoot": "../../src/",
     "moduleResolution": "node",
-    "declaration": true
+    "declaration": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ]
   },
   "files": [
-    "src/globemap.ts"
+    "./test/visualTest.ts"
+  ],
+  "include": [
+    "src/*.ts"
   ]
 }

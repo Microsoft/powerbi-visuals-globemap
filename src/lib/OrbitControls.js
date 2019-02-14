@@ -12,6 +12,8 @@
 //    Orbit - left mouse / touch: one finger move
 //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 //    Pan - right mouse, or arrow keys / touch: three finter swipe
+import * as THREE from "three";
+
 if (!THREE.OrbitControl) {
     THREE.OrbitControls = function (object, domElement) {
 

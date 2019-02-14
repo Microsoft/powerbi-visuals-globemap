@@ -23,118 +23,118 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import * as _ from "lodash";
+import powerbi from "powerbi-visuals-api";
+import IViewport = powerbi.IViewport;
 
-module powerbi.extensibility.visual {
-    export interface IMargin {
-        top: number;
-        bottom: number;
-        left: number;
-        right: number;
-    }
-
-    export class VisualLayout {
-        private marginValue: IMargin;
-        private viewportValue: IViewport;
-        private viewportInValue: IViewport;
-        private minViewportValue: IViewport;
-        private originalViewportValue: IViewport;
-        private previousOriginalViewportValue: IViewport;
-
-        public defaultMargin: IMargin;
-        public defaultViewport: IViewport;
-
-        constructor(defaultViewport?: IViewport, defaultMargin?: IMargin) {
-            this.defaultViewport = defaultViewport || { width: 0, height: 0 };
-            this.defaultMargin = defaultMargin || { top: 0, bottom: 0, right: 0, left: 0 };
-        }
-
-        public get viewport(): IViewport {
-            return this.viewportValue || (this.viewportValue = this.defaultViewport);
-        }
-
-        public get viewportCopy(): IViewport {
-            return _.clone(this.viewport);
-        }
-
-        // Returns viewport minus margin
-        public get viewportIn(): IViewport {
-            return this.viewportInValue || this.viewport;
-        }
-
-        public get minViewport(): IViewport {
-            return this.minViewportValue || { width: 0, height: 0 };
-        }
-
-        public get margin(): IMargin {
-            return this.marginValue || (this.marginValue = this.defaultMargin);
-        }
-
-        public set minViewport(value: IViewport) {
-            this.setUpdateObject(value, v => this.minViewportValue = v, VisualLayout.restrictToMinMax);
-        }
-
-        public set viewport(value: IViewport) {
-            this.previousOriginalViewportValue = _.clone(this.originalViewportValue);
-            this.originalViewportValue = _.clone(value);
-            this.setUpdateObject(value,
-                (v: IViewport) => this.viewportValue = v,
-                (o: IViewport) => VisualLayout.restrictToMinMax(o, this.minViewport));
-        }
-
-        public set margin(value: IMargin) {
-            this.setUpdateObject(value, (v: IMargin) => this.marginValue = v, VisualLayout.restrictToMinMax);
-        }
-
-        // Returns true if viewport has updated after last change.
-        public get viewportChanged(): boolean {
-            return !!this.originalViewportValue && (!this.previousOriginalViewportValue
-                || this.previousOriginalViewportValue.height !== this.originalViewportValue.height
-                || this.previousOriginalViewportValue.width !== this.originalViewportValue.width);
-        }
-
-        public get viewportInIsZero(): boolean {
-            return this.viewportIn.width === 0 || this.viewportIn.height === 0;
-        }
-
-        public resetMargin(): void {
-            this.margin = this.defaultMargin;
-        }
-
-        private update(): void {
-            this.viewportInValue = VisualLayout.restrictToMinMax({
-                width: this.viewport.width - (this.margin.left + this.margin.right),
-                height: this.viewport.height - (this.margin.top + this.margin.bottom)
-            }, this.minViewportValue);
-        }
-
-        private setUpdateObject<T>(object: T, setObjectFn: (T) => void, beforeUpdateFn?: (T) => void): void {
-            object = _.clone(object);
-            setObjectFn(VisualLayout.createNotifyChangedObject(object, (o: T) => {
-                if (beforeUpdateFn) beforeUpdateFn(object);
-                this.update();
-            }));
-
-            if (beforeUpdateFn) {
-                beforeUpdateFn(object);
-            }
-            this.update();
-        }
-
-        private static createNotifyChangedObject<T>(object: T, objectChanged: (o?: T, key?: string) => void): T {
-            let result: T = <T>{};
-            _.keys(object).forEach(key => Object.defineProperty(result, key, {
-                get: () => object[key],
-                set: (value) => { object[key] = value; objectChanged(object, key); },
-                enumerable: true,
-                configurable: true
-            }));
-            return result;
-        }
-
-        private static restrictToMinMax<T>(value: T, minValue?: T): T {
-            _.keys(value).forEach(x => value[x] = Math.max(minValue && minValue[x] || 0, value[x]));
-            return value;
-        }
-    }
+export interface IMargin {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
 }
 
+export class VisualLayout {
+    private marginValue: IMargin;
+    private viewportValue: IViewport;
+    private viewportInValue: IViewport;
+    private minViewportValue: IViewport;
+    private originalViewportValue: IViewport;
+    private previousOriginalViewportValue: IViewport;
+
+    public defaultMargin: IMargin;
+    public defaultViewport: IViewport;
+
+    constructor(defaultViewport?: IViewport, defaultMargin?: IMargin) {
+        this.defaultViewport = defaultViewport || { width: 0, height: 0 };
+        this.defaultMargin = defaultMargin || { top: 0, bottom: 0, right: 0, left: 0 };
+    }
+
+    public get viewport(): IViewport {
+        return this.viewportValue || (this.viewportValue = this.defaultViewport);
+    }
+
+    public get viewportCopy(): IViewport {
+        return _.clone(this.viewport);
+    }
+
+    // Returns viewport minus margin
+    public get viewportIn(): IViewport {
+        return this.viewportInValue || this.viewport;
+    }
+
+    public get minViewport(): IViewport {
+        return this.minViewportValue || { width: 0, height: 0 };
+    }
+
+    public get margin(): IMargin {
+        return this.marginValue || (this.marginValue = this.defaultMargin);
+    }
+
+    public set minViewport(value: IViewport) {
+        this.setUpdateObject(value, v => this.minViewportValue = v, VisualLayout.restrictToMinMax);
+    }
+
+    public set viewport(value: IViewport) {
+        this.previousOriginalViewportValue = _.clone(this.originalViewportValue);
+        this.originalViewportValue = _.clone(value);
+        this.setUpdateObject(value,
+            (v: IViewport) => this.viewportValue = v,
+            (o: IViewport) => VisualLayout.restrictToMinMax(o, this.minViewport));
+    }
+
+    public set margin(value: IMargin) {
+        this.setUpdateObject(value, (v: IMargin) => this.marginValue = v, VisualLayout.restrictToMinMax);
+    }
+
+    // Returns true if viewport has updated after last change.
+    public get viewportChanged(): boolean {
+        return !!this.originalViewportValue && (!this.previousOriginalViewportValue
+            || this.previousOriginalViewportValue.height !== this.originalViewportValue.height
+            || this.previousOriginalViewportValue.width !== this.originalViewportValue.width);
+    }
+
+    public get viewportInIsZero(): boolean {
+        return this.viewportIn.width === 0 || this.viewportIn.height === 0;
+    }
+
+    public resetMargin(): void {
+        this.margin = this.defaultMargin;
+    }
+
+    private update(): void {
+        this.viewportInValue = VisualLayout.restrictToMinMax({
+            width: this.viewport.width - (this.margin.left + this.margin.right),
+            height: this.viewport.height - (this.margin.top + this.margin.bottom)
+        }, this.minViewportValue);
+    }
+
+    private setUpdateObject<T>(object: T, setObjectFn: (T) => void, beforeUpdateFn?: (T) => void): void {
+        object = _.clone(object);
+        setObjectFn(VisualLayout.createNotifyChangedObject(object, (o: T) => {
+            if (beforeUpdateFn) beforeUpdateFn(object);
+            this.update();
+        }));
+
+        if (beforeUpdateFn) {
+            beforeUpdateFn(object);
+        }
+        this.update();
+    }
+
+    private static createNotifyChangedObject<T>(object: T, objectChanged: (o?: T, key?: string) => void): T {
+        let result: T = <T>{};
+        _.keys(object).forEach(key => Object.defineProperty(result, key, {
+            get: () => object[key],
+            set: (value) => { object[key] = value; objectChanged(object, key); },
+            enumerable: true,
+            configurable: true
+        }));
+        return result;
+    }
+
+    private static restrictToMinMax<T>(value: T, minValue?: T): T {
+        _.keys(value).forEach(x => value[x] = Math.max(minValue && minValue[x] || 0, value[x]));
+        return value;
+    }
+}
